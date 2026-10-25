@@ -1,0 +1,122 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  MENTOR
+  ADMIN
+}
+
+enum RuleType {
+  DOM_ELEMENT_EXISTS
+  ATTRIBUTE_MATCH
+  TEXT_CONTAINS
+}
+
+model User {
+  id          String   @id @default(cuid())
+  clerkUserId String   @unique
+  email       String   @unique
+  role        Role     @default(STUDENT)
+  avatarId    String   @default("pixel_wizard")
+  createdAt   DateTime @default(now())
+
+  progress UserProgress[]
+
+  @@index([clerkUserId])
+  @@map("users")
+}
+
+model Track {
+  id          String  @id @default(cuid())
+  title       String
+  slug        String  @unique
+  description String?
+  orderIndex  Int
+  published   Boolean @default(true)
+
+  modules Module[]
+
+  @@index([orderIndex])
+  @@map("tracks")
+}
+
+model Module {
+  id          String  @id @default(cuid())
+  trackId     String
+  title       String
+  slug        String
+  description String?
+  orderIndex  Int
+  published   Boolean @default(true)
+
+  track   Track    @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@unique([trackId, slug])
+  @@index([trackId, orderIndex])
+  @@map("modules")
+}
+
+model Lesson {
+  id                 String   @id @default(cuid())
+  slug               String   @unique
+  title              String
+  orderIndex         Int
+  instructionsMarkdown String?
+  starterCodeHtml    String?
+  starterCodeCss     String?
+  starterCodeJs      String?
+  solutionCodeHtml   String?
+  solutionCodeCss    String?
+  solutionCodeJs     String?
+  published          Boolean  @default(true)
+
+  moduleId           String
+  module             Module   @relation(fields: [moduleId], references: [id])
+
+  validationRules    ValidationRule[]
+  userProgresses     UserProgress[]
+
+  @@unique([moduleId, slug])
+}
+
+model ValidationRule {
+  id             String   @id @default(cuid())
+  lessonId       String
+  orderIndex     Int
+  type           RuleType
+  config         Json
+  successMessage String
+  failureMessage String
+  hintMessage    String?
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId, orderIndex])
+  @@map("validation_rules")
+}
+
+model UserProgress {
+  id                String   @id @default(cuid())
+  userId            String
+  lessonId          String
+  completed         Boolean  @default(false)
+  score             Int      @default(0)
+  lastSubmittedCode String?
+  updatedAt         DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
+  @@map("user_progress")
+}
