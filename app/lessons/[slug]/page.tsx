@@ -23,8 +23,8 @@ export default async function LessonPage({ params }: PageProps) {
   return (
     <LessonWorkspace
       key={lesson.id}
-      lesson={lesson}
-      modules={modules}
+      lesson={lesson as any}
+      modules={modules as any}
       completedLessonIds={completedLessonIds}
       avatarId={avatarId}
     />

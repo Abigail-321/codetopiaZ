@@ -130,7 +130,15 @@ export default function LessonWorkspace({
       <div className="grid min-h-0 flex-1 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
         {/* Instructions + avatar */}
         <div className="flex min-h-0 flex-col bg-[#0d1117] [&>section]:min-h-0 [&>section]:flex-1">
-          <InstructionsPane lesson={lesson} />
+        <InstructionsPane
+  lesson={{
+    ...lesson,
+    moduleId: (lesson as any).moduleId || "",
+    contentMarkdown: (lesson as any).contentMarkdown || "",
+    starterCode: (lesson as any).starterCode || "",
+    solutionCode: (lesson as any).solutionCode || "",
+  } as any}
+/>
           <div className="flex items-center gap-3 border-r border-t border-white/10 p-3 bg-[#12161f]">
             <AvatarSprite avatarId={avatarId} pose={avatarPose} size={64} />
             <p className="text-sm text-slate-300 font-medium">{avatarDialogue}</p>
