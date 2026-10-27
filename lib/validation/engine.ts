@@ -1,6 +1,6 @@
-// lib/validation/engine.ts
+/// lib/validation/engine.ts
 
-import { JSDOM, VirtualConsole } from "jsdom";
+import { parseHTML } from "linkedom";
 import type { RuleType } from "@prisma/client";
 import "server-only";
 
@@ -42,6 +42,30 @@ export interface EvaluationOutcome {
 const DEFAULT_JS_TIMEOUT_MS = 2000;
 
 /**
+ * Drop-in JSDOM compatibility wrapper using LinkeDOM
+ */
+class JSDOM {
+  window: any;
+  constructor(html: string = "", options?: any) {
+    const { document, window } = parseHTML(html);
+    this.window = {
+      ...window,
+      document,
+      eval: (code: string) => {
+        const evalFunction = new Function('window', 'document', `with(window) { ${code} }`);
+        return evalFunction(window, document);
+      },
+    };
+  }
+}
+
+class VirtualConsole {
+  on(event: string, callback: Function) {
+    return this;
+  }
+}
+
+/**
  * Builds a full document from the three source fragments and returns
  * a JSDOM instance with jsCode already executed against it.
  */
@@ -52,7 +76,6 @@ async function buildDom(
   timeoutMs: number
 ): Promise<{ dom: JSDOM | null; error: string | null }> {
   const virtualConsole = new VirtualConsole();
-  // Swallow student console.log/error output rather than polluting server logs.
   virtualConsole.on("jsdomError", () => {});
 
   const fullHtml = `<!DOCTYPE html><html>
@@ -67,7 +90,7 @@ async function buildDom(
   try {
     const dom = new JSDOM(fullHtml, {
       runScripts: jsCode?.trim() ? "dangerously" : "outside-only",
-      resources: undefined, // never fetch external resources
+      resources: undefined,
       virtualConsole,
     });
 
@@ -213,10 +236,6 @@ export async function evaluateSubmission(
   };
 }
 
-/**
- * Separate from submission scoring — call this when the student clicks
- * "Get a hint" rather than "Submit", so hints don't count as a failed attempt.
- */
 export function getHintForFirstFailingRule(
   document: Document,
   rules: RuleInput[]
