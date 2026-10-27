@@ -2,13 +2,13 @@
 
 import { prisma } from "@/lib/prisma";
 
-// Fetch all modules with their lessons for the sidebar menu
 export async function getModules() {
   try {
     const modules = await prisma.module.findMany({
       where: { published: true },
       orderBy: { orderIndex: "asc" },
       include: {
+        track: true, // <-- ADD THIS LINE SO TRACK IS NEVER UNDEFINED
         lessons: {
           orderBy: { orderIndex: "asc" },
           select: {
