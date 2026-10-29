@@ -34,7 +34,9 @@ export async function getLessonBySlug(slug: string) {
       where: { slug },
       include: {
         module: {
-          select: { title: true, slug: true },
+          include: {
+            track: true, // <-- This fetches the track relation so track.title exists!
+          },
         },
       },
     });
