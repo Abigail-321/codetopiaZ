@@ -16,9 +16,14 @@ interface TrackGroup {
 // contiguous. Grouping consecutive entries preserves that order.
 function groupByTrack(modules: ModuleWithLessons[]): TrackGroup[] {
   const groups: TrackGroup[] = [];
+  if (!modules || !Array.isArray(modules)) return groups;
+
   for (const m of modules) {
+    // Safely skip if module or track is missing
+    if (!m || !m.track) continue;
+
     const last = groups[groups.length - 1];
-    if (last && last.track.id === m.track.id) {
+    if (last && last.track?.id === m.track.id) {
       last.modules.push(m);
     } else {
       groups.push({ track: m.track, modules: [m] });
@@ -50,14 +55,14 @@ export default function Sidebar({
         {trackGroups.map(({ track, modules: trackModules }) => (
           <div key={track.id}>
             <p className="mb-3 px-2 text-[11px] font-bold uppercase tracking-widest text-blue-400">
-              {track.title}
+              {track?.title ?? "Untitled Track"}
             </p>
 
             <div className="flex flex-col gap-5">
               {trackModules.map((module) => (
                 <div key={module.id}>
                   <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    {module.title}
+                    {module?.title ?? "Untitled Module"}
                   </p>
                   <ul className="flex flex-col gap-1">
                     {module.lessons.map((lesson) => {
