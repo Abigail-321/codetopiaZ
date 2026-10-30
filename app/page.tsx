@@ -1,44 +1,130 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { ArrowRight, Code2, Sparkles, Terminal, Trophy } from "lucide-react";
 
 export default async function Home() {
   const { userId } = await auth();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0b0e14] px-6 text-slate-200">
-      <main className="flex max-w-2xl flex-col items-center text-center gap-8">
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl text-white">
-          Welcome to <span className="text-indigo-500">CodeTopiaZ</span>
-        </h1>
-        <p className="text-lg text-slate-400 max-w-lg">
-          Master web development, programming, and digital literacy with hands-on code challenges and interactive lessons.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 mt-2">
+    <div className="min-h-screen bg-[#0b0e14] text-slate-100 flex flex-col justify-between relative overflow-hidden">
+      {/* Background Glow Effect */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* Top Nav */}
+      <header className="w-full max-w-7xl mx-auto px-6 py-6 flex justify-between items-center z-10">
+        <div className="flex items-center gap-2 font-bold text-lg tracking-tight">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-mono shadow-lg shadow-indigo-600/30">
+            Z
+          </div>
+          <span>CodeTopiaZ</span>
+        </div>
+        <div className="flex items-center gap-4">
           {userId ? (
             <Link
               href="/lessons/headings-and-paragraphs"
-              className="flex h-12 items-center justify-center rounded-lg bg-indigo-600 px-6 font-semibold text-white hover:bg-indigo-500 transition-colors"
+              className="text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg transition-all shadow-lg shadow-indigo-600/20"
             >
-              Start Learning
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <SignInButton mode="modal">
+                <button className="text-sm font-medium text-slate-300 hover:text-white transition-colors cursor-pointer">
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg transition-all shadow-lg shadow-indigo-600/20 cursor-pointer">
+                  Get Started
+                </button>
+              </SignUpButton>
+            </>
+          )}
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="w-full max-w-5xl mx-auto px-6 py-16 text-center z-10 flex flex-col items-center">
+        {/* Badge Pill */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Interactive Web Development Learning Platform</span>
+        </div>
+
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-3xl leading-[1.1] mb-6 text-white">
+          Master code through <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">doing, not just reading.</span>
+        </h1>
+
+        <p className="text-slate-400 text-lg sm:text-xl max-w-2xl mb-10 leading-relaxed">
+          Master web development, programming, and digital literacy with hands-on code challenges and interactive lessons.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center mb-20">
+          {userId ? (
+            <Link
+              href="/lessons/headings-and-paragraphs"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-8 py-3.5 rounded-xl transition-all shadow-xl shadow-indigo-600/25 group"
+            >
+              <span>Continue Learning</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           ) : (
             <>
               <SignUpButton mode="modal">
-                <button className="flex h-12 items-center justify-center rounded-lg bg-indigo-600 px-6 font-semibold text-white hover:bg-indigo-500 transition-colors">
-                  Start Learning
+                <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-8 py-3.5 rounded-xl transition-all shadow-xl shadow-indigo-600/25 group cursor-pointer">
+                  <span>Start Learning Now</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </SignUpButton>
 
               <SignInButton mode="modal">
-                <button className="flex h-12 items-center justify-center rounded-lg border border-slate-700 bg-slate-900/50 px-6 font-semibold text-slate-300 hover:border-slate-600 hover:bg-slate-800 transition-colors">
-                  Sign In
+                <button className="w-full sm:w-auto flex items-center justify-center bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-medium px-8 py-3.5 rounded-xl border border-slate-800 transition-all cursor-pointer">
+                  Sign In to Account
                 </button>
               </SignInButton>
             </>
           )}
         </div>
+
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
+          <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 backdrop-blur-sm">
+            <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-4">
+              <Code2 className="w-5 h-5" />
+            </div>
+            <h3 className="font-semibold text-slate-200 mb-2">Interactive Challenges</h3>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Write live HTML, CSS, and JavaScript directly in your browser with immediate feedback.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 backdrop-blur-sm">
+            <div className="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-4">
+              <Terminal className="w-5 h-5" />
+            </div>
+            <h3 className="font-semibold text-slate-200 mb-2">Automated Validation</h3>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Custom validation rules test your code structure and logic automatically upon submission.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 backdrop-blur-sm">
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
+              <Trophy className="w-5 h-5" />
+            </div>
+            <h3 className="font-semibold text-slate-200 mb-2">Structured Curriculum</h3>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Progress seamlessly from core HTML layouts to advanced DOM manipulation and JavaScript logic.
+            </p>
+          </div>
+        </div>
       </main>
+
+      {/* Footer */}
+      <footer className="w-full max-w-7xl mx-auto px-6 py-8 border-t border-slate-900 text-center text-sm text-slate-500 z-10">
+        <p>© {new Date().getFullYear()} CodeTopiaZ. Built for learners and creators.</p>
+      </footer>
     </div>
   );
 }
