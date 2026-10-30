@@ -63,7 +63,7 @@ export default function Sidebar({
                   return (
                     <Link
                       key={lesson.id}
-                      href={`/learn/${lesson.slug}`}
+                      href={`/lessons/${lesson.slug}`}
                       className={`flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors ${
                         isActive
                           ? "bg-blue-600/20 text-blue-400 font-medium"
