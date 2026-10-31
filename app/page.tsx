@@ -9,9 +9,7 @@ import {
   Trophy, 
   Bot, 
   CheckCircle2, 
-  Zap, 
-  Flame, 
-  Layers 
+  Zap 
 } from "lucide-react";
 
 export default async function Home() {
@@ -192,9 +190,19 @@ export default async function Home() {
       {/* Footer */}
       <footer className="w-full max-w-7xl mx-auto px-6 py-8 border-t border-slate-900/80 text-center text-sm text-slate-500 z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p>© {new Date().getFullYear()} CodeTopiaZ. Interactive Web Development Platform.</p>
-        <div className="flex items-center gap-3 text-xs text-slate-400 font-mono">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-          <span>All systems operational</span>
+        <div className="flex items-center gap-6">
+          <a
+            href="https://github.com/Abigail-321/codetopiaZ"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-slate-400 hover:text-indigo-400 transition-colors flex items-center gap-1.5 font-mono"
+          >
+            <span>GitHub</span>
+          </a>
+          <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span>All systems operational</span>
+          </div>
         </div>
       </footer>
     </div>
